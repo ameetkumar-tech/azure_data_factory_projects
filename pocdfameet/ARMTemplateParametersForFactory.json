@@ -5,11 +5,38 @@
 		"factoryName": {
 			"value": "pocdfameet"
 		},
+		"ADLS_Storage_accountKey": {
+			"value": ""
+		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
 		"Input_Container_LinkedServices_accountKey": {
 			"value": ""
 		},
+		"OnPrem_SQLServer_password": {
+			"value": ""
+		},
+		"ADLS_Storage_properties_typeProperties_url": {
+			"value": "https://storagepocameet.dfs.core.windows.net/"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"value": "1205-103317-mwsu2aoy"
+		},
+		"HttpServer1_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/"
+		},
 		"Input_Container_LinkedServices_properties_typeProperties_url": {
 			"value": "https://pocstorageameet.dfs.core.windows.net/"
+		},
+		"OnPrem_SQLServer_properties_typeProperties_server": {
+			"value": "Ameet"
+		},
+		"OnPrem_SQLServer_properties_typeProperties_database": {
+			"value": "Ameet"
+		},
+		"OnPrem_SQLServer_properties_typeProperties_userName": {
+			"value": "sa"
 		}
 	}
 }

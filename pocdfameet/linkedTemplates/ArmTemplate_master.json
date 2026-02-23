@@ -7,13 +7,49 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "pocdfameet"
 		},
+		"ADLS_Storage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLS_Storage'"
+		},
+		"AzureDatabricks1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
+		},
 		"Input_Container_LinkedServices_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'Input_Container_LinkedServices'"
 		},
+		"OnPrem_SQLServer_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'OnPrem_SQLServer'"
+		},
+		"ADLS_Storage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storagepocameet.dfs.core.windows.net/"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1205-103317-mwsu2aoy"
+		},
+		"HttpServer1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://raw.githubusercontent.com/"
+		},
 		"Input_Container_LinkedServices_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://pocstorageameet.dfs.core.windows.net/"
+		},
+		"OnPrem_SQLServer_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "Ameet"
+		},
+		"OnPrem_SQLServer_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "Ameet"
+		},
+		"OnPrem_SQLServer_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sa"
 		},
 		"containerUri": {
 			"type": "string",
@@ -42,15 +78,62 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"ADLS_Storage_accountKey": {
+						"value": "[parameters('ADLS_Storage_accountKey')]"
+					},
+					"AzureDatabricks1_accessToken": {
+						"value": "[parameters('AzureDatabricks1_accessToken')]"
+					},
 					"Input_Container_LinkedServices_accountKey": {
 						"value": "[parameters('Input_Container_LinkedServices_accountKey')]"
 					},
+					"OnPrem_SQLServer_password": {
+						"value": "[parameters('OnPrem_SQLServer_password')]"
+					},
+					"ADLS_Storage_properties_typeProperties_url": {
+						"value": "[parameters('ADLS_Storage_properties_typeProperties_url')]"
+					},
+					"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+					},
+					"HttpServer1_properties_typeProperties_url": {
+						"value": "[parameters('HttpServer1_properties_typeProperties_url')]"
+					},
 					"Input_Container_LinkedServices_properties_typeProperties_url": {
 						"value": "[parameters('Input_Container_LinkedServices_properties_typeProperties_url')]"
+					},
+					"OnPrem_SQLServer_properties_typeProperties_server": {
+						"value": "[parameters('OnPrem_SQLServer_properties_typeProperties_server')]"
+					},
+					"OnPrem_SQLServer_properties_typeProperties_database": {
+						"value": "[parameters('OnPrem_SQLServer_properties_typeProperties_database')]"
+					},
+					"OnPrem_SQLServer_properties_typeProperties_userName": {
+						"value": "[parameters('OnPrem_SQLServer_properties_typeProperties_userName')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "pocdfameet_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'pocdfameet_ArmTemplate_0')]"
+			]
 		}
 	]
 }
