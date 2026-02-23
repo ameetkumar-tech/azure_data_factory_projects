@@ -1,0 +1,12 @@
+{
+	"name": "Input_Container_LinkedServices",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://pocstorageameet.dfs.core.windows.net/",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDg4NUZGOTc2LTM5NjgtNDZEMi04Nzc2LTExODhDQzY4NEFFMV85MGVlYTkwZC1lZDc0LTQ0NzYtYmQ1ZS1jYzAxOTk2MzNmMzciDQp9"
+		}
+	}
+}
