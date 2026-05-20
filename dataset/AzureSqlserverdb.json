@@ -1,0 +1,76 @@
+{
+	"name": "AzureSqlserverdb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Retailer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RetailerID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Invoice_Date",
+				"type": "date"
+			},
+			{
+				"name": "Region",
+				"type": "nvarchar"
+			},
+			{
+				"name": "State",
+				"type": "nvarchar"
+			},
+			{
+				"name": "City",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Product",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Price_Per_Unit",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Unit_Sold",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Total_Sales",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Operating_Profit",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Operating_Margin_In_Percent",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Sales_Method",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Adidasussalesdata"
+		}
+	}
+}
