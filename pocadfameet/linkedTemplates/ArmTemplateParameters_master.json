@@ -14,6 +14,9 @@
 		"AzureDatabricks1_accessToken": {
 			"value": ""
 		},
+		"AzureSqlDatabase_password": {
+			"value": ""
+		},
 		"Input_Container_LinkedServices_accountKey": {
 			"value": ""
 		},
@@ -28,6 +31,15 @@
 		},
 		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
 			"value": "1205-103317-mwsu2aoy"
+		},
+		"AzureSqlDatabase_properties_typeProperties_server": {
+			"value": "possqlserverameet.database.windows.net"
+		},
+		"AzureSqlDatabase_properties_typeProperties_database": {
+			"value": "pocdatabaseameet"
+		},
+		"AzureSqlDatabase_properties_typeProperties_userName": {
+			"value": "ameet"
 		},
 		"HttpServer1_properties_typeProperties_url": {
 			"value": "https://raw.githubusercontent.com/"

@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
 		},
+		"AzureSqlDatabase_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase'"
+		},
 		"Input_Container_LinkedServices_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'Input_Container_LinkedServices'"
@@ -38,6 +42,18 @@
 		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
 			"type": "string",
 			"defaultValue": "1205-103317-mwsu2aoy"
+		},
+		"AzureSqlDatabase_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "possqlserverameet.database.windows.net"
+		},
+		"AzureSqlDatabase_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "pocdatabaseameet"
+		},
+		"AzureSqlDatabase_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ameet"
 		},
 		"HttpServer1_properties_typeProperties_url": {
 			"type": "string",
@@ -112,6 +128,28 @@
 						"value": "[parameters('AzureDatabricks1_accessToken')]"
 					},
 					"existingClusterId": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDatabase_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabase_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabase_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabase_password')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -280,6 +318,87 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLS_Storage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlserverdb')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Retailer",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RetailerID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Invoice_Date",
+						"type": "date"
+					},
+					{
+						"name": "Region",
+						"type": "nvarchar"
+					},
+					{
+						"name": "State",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Product",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Price_Per_Unit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Unit_Sold",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Total_Sales",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Operating_Profit",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Operating_Margin_In_Percent",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Sales_Method",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Adidasussalesdata"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
 			]
 		},
 		{
@@ -671,104 +790,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/OnPrem_SQLServer')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Output_files')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Input_Container_LinkedServices",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "output"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Input_Container_LinkedServices')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ADLS_Storage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "part-00000-9653dd84-763b-4dac-9591-7da250d0e88e-c000.snappy.parquet",
-						"folderPath": "gold",
-						"fileSystem": "retail"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": [
-					{
-						"name": "transaction_date",
-						"type": "DATE"
-					},
-					{
-						"name": "product_id",
-						"type": "INT32"
-					},
-					{
-						"name": "product_name",
-						"type": "UTF8"
-					},
-					{
-						"name": "category",
-						"type": "UTF8"
-					},
-					{
-						"name": "store_id",
-						"type": "INT32"
-					},
-					{
-						"name": "store_name",
-						"type": "UTF8"
-					},
-					{
-						"name": "location",
-						"type": "UTF8"
-					},
-					{
-						"name": "total_quantity_sold",
-						"type": "INT64"
-					},
-					{
-						"name": "total_sales_amount",
-						"type": "DOUBLE"
-					},
-					{
-						"name": "number_of_transactions",
-						"type": "INT64"
-					},
-					{
-						"name": "average_transaction_value",
-						"type": "DOUBLE"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLS_Storage')]"
 			]
 		}
 	]
