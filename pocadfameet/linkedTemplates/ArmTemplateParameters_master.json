@@ -20,13 +20,13 @@
 		"AzureSqlDatabase_password": {
 			"value": ""
 		},
+		"AzureSqlDbconn_password": {
+			"value": ""
+		},
 		"Input_Container_LinkedServices_accountKey": {
 			"value": ""
 		},
 		"OnPrem_SQLServer_password": {
-			"value": ""
-		},
-		"AzureSqlDbconn_password": {
 			"value": ""
 		},
 		"ADLS_Storage_properties_typeProperties_url": {
@@ -50,6 +50,15 @@
 		"AzureSqlDatabase_properties_typeProperties_userName": {
 			"value": "ameet"
 		},
+		"AzureSqlDbconn_properties_typeProperties_server": {
+			"value": "pocsqlserverameet.database.windows.net"
+		},
+		"AzureSqlDbconn_properties_typeProperties_database": {
+			"value": "pocdbameet"
+		},
+		"AzureSqlDbconn_properties_typeProperties_userName": {
+			"value": "ameet"
+		},
 		"HttpServer1_properties_typeProperties_url": {
 			"value": "https://raw.githubusercontent.com/"
 		},
@@ -67,15 +76,6 @@
 		},
 		"storageventbasedtrigger_properties_typeProperties_scope": {
 			"value": "/subscriptions/80ea84e8-afce-4851-928a-9e2219724c69/resourceGroups/1-1bf360e5-playground-sandbox/providers/Microsoft.Storage/storageAccounts/pocstorageacameet"
-		},
-		"AzureSqlDbconn_properties_typeProperties_server": {
-			"value": "pocsqlserverameet.database.windows.net"
-		},
-		"AzureSqlDbconn_properties_typeProperties_database": {
-			"value": "pocdbameet"
-		},
-		"AzureSqlDbconn_properties_typeProperties_userName": {
-			"value": "ameet"
 		},
 		"tumblingwindowtrigger_properties_pipeline_parameters_pstartdate": {
 			"value": "@trigger().outputs.windowstarttime"
