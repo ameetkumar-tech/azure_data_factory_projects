@@ -1,0 +1,83 @@
+{
+	"name": "Mumbai_Union_Delhi",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "mumbaisourceunionconn",
+						"type": "DatasetReference"
+					},
+					"name": "Mumbaisource1"
+				},
+				{
+					"dataset": {
+						"referenceName": "Delhisourceunionconn",
+						"type": "DatasetReference"
+					},
+					"name": "Delhisource2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "mumbaiuniondelhioutput",
+						"type": "DatasetReference"
+					},
+					"name": "mumbaiuniondelhioutput"
+				}
+			],
+			"transformations": [
+				{
+					"name": "mumbaiuniondelhi"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Month as string,",
+				"          Sales as string,",
+				"          Profit as string,",
+				"          Location as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Mumbaisource1",
+				"source(output(",
+				"          Month as string,",
+				"          Sales as string,",
+				"          Profit as string,",
+				"          Location as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Delhisource2",
+				"Mumbaisource1, Delhisource2 union(byName: true)~> mumbaiuniondelhi",
+				"mumbaiuniondelhi sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CustomerID as string,",
+				"          NameStyle as string,",
+				"          Title as string,",
+				"          FirstName as string,",
+				"          MiddleName as string,",
+				"          LastName as string,",
+				"          Suffix as string,",
+				"          CompanyName as string,",
+				"          SalesPerson as string,",
+				"          EmailAddress as string,",
+				"          Phone as string,",
+				"          PasswordHash as string,",
+				"          PasswordSalt as string,",
+				"          rowguid as string,",
+				"          ModifiedDate as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> mumbaiuniondelhioutput"
+			]
+		}
+	}
+}
