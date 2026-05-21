@@ -35,6 +35,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'OnPrem_SQLServer'"
 		},
+		"AzureSqlDbconn_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDbconn'"
+		},
 		"ADLS_Storage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://storagepocameet.dfs.core.windows.net/"
@@ -82,6 +86,18 @@
 		"OnPrem_SQLServer_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "sa"
+		},
+		"AzureSqlDbconn_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "pocsqlserverameet.database.windows.net"
+		},
+		"AzureSqlDbconn_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "pocdbameet"
+		},
+		"AzureSqlDbconn_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ameet"
 		}
 	},
 	"variables": {
@@ -228,6 +244,28 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('OnPrem_SQLServer_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDbconn')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDbconn_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDbconn_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDbconn_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDbconn_password')]"
 					}
 				}
 			},
@@ -739,57 +777,6 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "stores"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/OnPrem_SQLServer')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OnPrem_Transactions')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OnPrem_SQLServer",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "transaction_id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "customer_id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "product_id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "store_id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "quantity",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "transaction_date",
-						"type": "date"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "transactions"
 				}
 			},
 			"dependsOn": [

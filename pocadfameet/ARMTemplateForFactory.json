@@ -35,6 +35,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'OnPrem_SQLServer'"
 		},
+		"AzureSqlDbconn_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDbconn'"
+		},
 		"ADLS_Storage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://storagepocameet.dfs.core.windows.net/"
@@ -86,6 +90,26 @@
 		"storageventbasedtrigger_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/80ea84e8-afce-4851-928a-9e2219724c69/resourceGroups/1-1bf360e5-playground-sandbox/providers/Microsoft.Storage/storageAccounts/pocstorageacameet"
+		},
+		"AzureSqlDbconn_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "pocsqlserverameet.database.windows.net"
+		},
+		"AzureSqlDbconn_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "pocdbameet"
+		},
+		"AzureSqlDbconn_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ameet"
+		},
+		"tumblingwindowtrigger_properties_pipeline_parameters_pstartdate": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowstarttime"
+		},
+		"tumblingwindowtrigger_properties_pipeline_parameters_penddate": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndtime"
 		}
 	},
 	"variables": {
@@ -1186,7 +1210,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/storageeventbasedtrigger')]",
+			"name": "[concat(parameters('factoryName'), '/Storageeventbasedtrigger')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1250,6 +1274,102 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/sourceinputfile')]",
 				"[concat(variables('factoryId'), '/datasets/outputjson')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Tumblingwindowtrigger')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Tumblingwindowtrigger",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[cust_sale]",
+								"storedProcedureParameters": {
+									"enddate": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.penddate",
+											"type": "Expression"
+										}
+									},
+									"startdate": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.pstartdate",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSqlconn",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "tumblingoutput",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"pstartdate": {
+						"type": "string"
+					},
+					"penddate": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AzureSqlconn')]",
+				"[concat(variables('factoryId'), '/datasets/tumblingoutput')]"
 			]
 		},
 		{
@@ -2498,7 +2618,7 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "storageeventbasedtrigger",
+							"referenceName": "Storageeventbasedtrigger",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -2515,7 +2635,109 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/storageeventbasedtrigger')]"
+				"[concat(variables('factoryId'), '/pipelines/Storageeventbasedtrigger')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlconn')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDbconn",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDbconn')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDbconn')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDbconn_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDbconn_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDbconn_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDbconn_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/tumblingoutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStoragegen1forinput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "output"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStoragegen1forinput')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/tumblingwindowtrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "Tumblingwindowtrigger",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"pstartdate": "[parameters('tumblingwindowtrigger_properties_pipeline_parameters_pstartdate')]",
+						"penddate": "[parameters('tumblingwindowtrigger_properties_pipeline_parameters_penddate')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Hour",
+					"interval": 24,
+					"startTime": "2024-03-01T00:00:00Z",
+					"endTime": "2024-03-07T22:53:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Tumblingwindowtrigger')]"
 			]
 		}
 	]

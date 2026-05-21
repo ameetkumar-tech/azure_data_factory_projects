@@ -35,6 +35,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'OnPrem_SQLServer'"
 		},
+		"AzureSqlDbconn_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDbconn'"
+		},
 		"ADLS_Storage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://storagepocameet.dfs.core.windows.net/"
@@ -87,6 +91,26 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/80ea84e8-afce-4851-928a-9e2219724c69/resourceGroups/1-1bf360e5-playground-sandbox/providers/Microsoft.Storage/storageAccounts/pocstorageacameet"
 		},
+		"AzureSqlDbconn_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "pocsqlserverameet.database.windows.net"
+		},
+		"AzureSqlDbconn_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "pocdbameet"
+		},
+		"AzureSqlDbconn_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ameet"
+		},
+		"tumblingwindowtrigger_properties_pipeline_parameters_pstartdate": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowstarttime"
+		},
+		"tumblingwindowtrigger_properties_pipeline_parameters_penddate": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndtime"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -135,6 +159,9 @@
 					"OnPrem_SQLServer_password": {
 						"value": "[parameters('OnPrem_SQLServer_password')]"
 					},
+					"AzureSqlDbconn_password": {
+						"value": "[parameters('AzureSqlDbconn_password')]"
+					},
 					"ADLS_Storage_properties_typeProperties_url": {
 						"value": "[parameters('ADLS_Storage_properties_typeProperties_url')]"
 					},
@@ -170,6 +197,15 @@
 					},
 					"OnPrem_SQLServer_properties_typeProperties_userName": {
 						"value": "[parameters('OnPrem_SQLServer_properties_typeProperties_userName')]"
+					},
+					"AzureSqlDbconn_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDbconn_properties_typeProperties_server')]"
+					},
+					"AzureSqlDbconn_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDbconn_properties_typeProperties_database')]"
+					},
+					"AzureSqlDbconn_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlDbconn_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -188,14 +224,40 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"storageventbasedtrigger_properties_typeProperties_scope": {
-						"value": "[parameters('storageventbasedtrigger_properties_typeProperties_scope')]"
 					}
 				}
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'pocadfameet_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "pocadfameet_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"storageventbasedtrigger_properties_typeProperties_scope": {
+						"value": "[parameters('storageventbasedtrigger_properties_typeProperties_scope')]"
+					},
+					"tumblingwindowtrigger_properties_pipeline_parameters_pstartdate": {
+						"value": "[parameters('tumblingwindowtrigger_properties_pipeline_parameters_pstartdate')]"
+					},
+					"tumblingwindowtrigger_properties_pipeline_parameters_penddate": {
+						"value": "[parameters('tumblingwindowtrigger_properties_pipeline_parameters_penddate')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'pocadfameet_ArmTemplate_1')]"
 			]
 		}
 	]
