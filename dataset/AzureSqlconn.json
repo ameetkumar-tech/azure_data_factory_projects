@@ -1,0 +1,12 @@
+{
+	"name": "AzureSqlconn",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDbconn",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
