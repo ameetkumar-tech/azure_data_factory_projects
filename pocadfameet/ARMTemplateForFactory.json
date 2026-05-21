@@ -3497,7 +3497,8 @@
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> mumbaiuniondelhioutput"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> mumbaiuniondelhioutput"
 					]
 				}
 			},
