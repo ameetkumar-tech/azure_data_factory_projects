@@ -1,0 +1,32 @@
+{
+	"name": "departmentsource2conn",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoragegen1forinput",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Department.csv",
+				"fileSystem": "department"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Dept_ID",
+				"type": "String"
+			},
+			{
+				"name": "Department",
+				"type": "String"
+			}
+		]
+	}
+}
