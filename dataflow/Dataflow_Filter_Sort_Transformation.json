@@ -1,0 +1,67 @@
+{
+	"name": "Dataflow_Filter_Sort_Transformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTablecustomer",
+						"type": "DatasetReference"
+					},
+					"name": "Azuresqlsource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "datalakedataflowoutput",
+						"type": "DatasetReference"
+					},
+					"name": "datalakegen2csv"
+				}
+			],
+			"transformations": [
+				{
+					"name": "filtertitleMr"
+				},
+				{
+					"name": "sortonfirstnameasc"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CustomerID as integer,",
+				"          NameStyle as boolean,",
+				"          Title as string,",
+				"          FirstName as string,",
+				"          MiddleName as string,",
+				"          LastName as string,",
+				"          Suffix as string,",
+				"          CompanyName as string,",
+				"          SalesPerson as string,",
+				"          EmailAddress as string,",
+				"          Phone as string,",
+				"          PasswordHash as string,",
+				"          PasswordSalt as string,",
+				"          rowguid as string,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Azuresqlsource",
+				"Azuresqlsource filter(Title=='Mr.') ~> filtertitleMr",
+				"filtertitleMr sort(asc(FirstName, true),",
+				"     caseInsensitive: true) ~> sortonfirstnameasc",
+				"sortonfirstnameasc sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> datalakegen2csv"
+			]
+		}
+	}
+}

@@ -1,0 +1,22 @@
+{
+	"name": "datalakedataflowoutput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoragegen1forinput",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "dataflowoutput"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
