@@ -11,6 +11,9 @@
 		"AzureDataLakeStorageGen2_accountKey": {
 			"value": ""
 		},
+		"AzureDataLakeStoragegen1forinput_accountKey": {
+			"value": ""
+		},
 		"AzureDatabricks1_accessToken": {
 			"value": ""
 		},
@@ -28,6 +31,9 @@
 		},
 		"AzureDataLakeStorageGen2_properties_typeProperties_url": {
 			"value": "https://pocstorageaccountameet.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStoragegen1forinput_properties_typeProperties_url": {
+			"value": "https://pocstorageacameet.dfs.core.windows.net/"
 		},
 		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
 			"value": "1205-103317-mwsu2aoy"
