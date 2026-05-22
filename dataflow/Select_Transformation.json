@@ -1,0 +1,74 @@
+{
+	"name": "Select_Transformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sourcefiledatalake1",
+						"type": "DatasetReference"
+					},
+					"name": "sourcedatafile"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "selectoutputfile",
+						"type": "DatasetReference"
+					},
+					"name": "outputcontainer"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selecttransformation"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Retailer as string,",
+				"          {Retailer ID} as string,",
+				"          {Invoice Date} as string,",
+				"          Region as string,",
+				"          State as string,",
+				"          City as string,",
+				"          Product as string,",
+				"          {Price per Unit} as string,",
+				"          {Units Sold} as string,",
+				"          {Total Sales} as string,",
+				"          {Operating Profit} as string,",
+				"          {Operating Margin} as string,",
+				"          {Sales Method} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcedatafile",
+				"sourcedatafile select(mapColumn(",
+				"          Retailer,",
+				"          Retailer_ID = {Retailer ID},",
+				"          Invoice_Date = {Invoice Date},",
+				"          Region,",
+				"          State,",
+				"          City,",
+				"          Product_Desc = Product,",
+				"          Price_per_Unit = {Price per Unit},",
+				"          Units_Sold = {Units Sold},",
+				"          Total_Sales = {Total Sales},",
+				"          Operating_Profit = {Operating Profit}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selecttransformation",
+				"selecttransformation sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> outputcontainer"
+			]
+		}
+	}
+}
