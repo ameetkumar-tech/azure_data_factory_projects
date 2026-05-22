@@ -1,0 +1,67 @@
+{
+	"name": "aggregatedoutputconn",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorageGen2_20260522",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "output"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Retailer",
+				"type": "String"
+			},
+			{
+				"name": "Retailer_ID",
+				"type": "String"
+			},
+			{
+				"name": "Invoice_Date",
+				"type": "String"
+			},
+			{
+				"name": "Region",
+				"type": "String"
+			},
+			{
+				"name": "State",
+				"type": "String"
+			},
+			{
+				"name": "City",
+				"type": "String"
+			},
+			{
+				"name": "Product_Desc",
+				"type": "String"
+			},
+			{
+				"name": "Price_per_Unit",
+				"type": "String"
+			},
+			{
+				"name": "Units_Sold",
+				"type": "String"
+			},
+			{
+				"name": "Total_Sales",
+				"type": "String"
+			},
+			{
+				"name": "Operating_Profit",
+				"type": "String"
+			}
+		]
+	}
+}

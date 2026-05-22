@@ -1,0 +1,69 @@
+{
+	"name": "Aggregate_Transformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "aggregatesourcefileconn",
+						"type": "DatasetReference"
+					},
+					"name": "Aggregatesourcefile"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "aggregatedoutputconn",
+						"type": "DatasetReference"
+					},
+					"name": "outputaggregatedfile"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregatetransformation"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ID as string,",
+				"          Name as string,",
+				"          Salary as integer,",
+				"          Address as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Aggregatesourcefile",
+				"Aggregatesourcefile aggregate(groupBy(Address),",
+				"     ID = countDistinct(ID),",
+				"          Total_Salary = sum(Salary),",
+				"          Max_Salary = max(Salary),",
+				"          Min_Salary = min(Salary),",
+				"          Average_Salary = avg(Salary)) ~> aggregatetransformation",
+				"aggregatetransformation sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Retailer as string,",
+				"          Retailer_ID as string,",
+				"          Invoice_Date as string,",
+				"          Region as string,",
+				"          State as string,",
+				"          City as string,",
+				"          Product_Desc as string,",
+				"          Price_per_Unit as string,",
+				"          Units_Sold as string,",
+				"          Total_Sales as string,",
+				"          Operating_Profit as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> outputaggregatedfile"
+			]
+		}
+	}
+}
