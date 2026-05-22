@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2'"
 		},
+		"AzureDataLakeStorageGen2_20260522_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2_20260522'"
+		},
 		"AzureDataLakeStoragegen1forinput_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStoragegen1forinput'"
@@ -44,6 +48,10 @@
 			"defaultValue": "https://storagepocameet.dfs.core.windows.net/"
 		},
 		"AzureDataLakeStorageGen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://pocstorageaccountameet.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageGen2_20260522_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://pocstorageaccountameet.dfs.core.windows.net/"
 		},
@@ -1300,6 +1308,52 @@
 				"[concat(variables('factoryId'), '/datasets/SqlServerTable2')]",
 				"[concat(variables('factoryId'), '/datasets/DelimitedText3')]",
 				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Select_Transformation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Select_Transformation",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Select_Transformation",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcedatafile": {},
+									"outputcontainer": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Select_Transformation')]"
 			]
 		},
 		{
@@ -2901,6 +2955,114 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/selectoutputfile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageGen2_20260522",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "output"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageGen2_20260522')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sourcefiledatalake1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageGen2_20260522",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Adidas US Sales Datasets.csv",
+						"fileSystem": "input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Retailer",
+						"type": "String"
+					},
+					{
+						"name": "Retailer ID",
+						"type": "String"
+					},
+					{
+						"name": "Invoice Date",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "State",
+						"type": "String"
+					},
+					{
+						"name": "City",
+						"type": "String"
+					},
+					{
+						"name": "Product",
+						"type": "String"
+					},
+					{
+						"name": "Price per Unit",
+						"type": "String"
+					},
+					{
+						"name": "Units Sold",
+						"type": "String"
+					},
+					{
+						"name": "Total Sales",
+						"type": "String"
+					},
+					{
+						"name": "Operating Profit",
+						"type": "String"
+					},
+					{
+						"name": "Operating Margin",
+						"type": "String"
+					},
+					{
+						"name": "Sales Method",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageGen2_20260522')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/sourcefileforazuresql')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -3141,6 +3303,23 @@
 					"accountKey": {
 						"type": "SecureString",
 						"value": "[parameters('AzureDataLakeStorageGen2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorageGen2_20260522')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorageGen2_20260522_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorageGen2_20260522_accountKey')]"
 					}
 				}
 			},
@@ -3506,6 +3685,86 @@
 				"[concat(variables('factoryId'), '/datasets/mumbaisourceunionconn')]",
 				"[concat(variables('factoryId'), '/datasets/Delhisourceunionconn')]",
 				"[concat(variables('factoryId'), '/datasets/mumbaiuniondelhioutput')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Select_Transformation')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "sourcefiledatalake1",
+								"type": "DatasetReference"
+							},
+							"name": "sourcedatafile"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "selectoutputfile",
+								"type": "DatasetReference"
+							},
+							"name": "outputcontainer"
+						}
+					],
+					"transformations": [
+						{
+							"name": "selecttransformation"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Retailer as string,",
+						"          {Retailer ID} as string,",
+						"          {Invoice Date} as string,",
+						"          Region as string,",
+						"          State as string,",
+						"          City as string,",
+						"          Product as string,",
+						"          {Price per Unit} as string,",
+						"          {Units Sold} as string,",
+						"          {Total Sales} as string,",
+						"          {Operating Profit} as string,",
+						"          {Operating Margin} as string,",
+						"          {Sales Method} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> sourcedatafile",
+						"sourcedatafile select(mapColumn(",
+						"          Retailer,",
+						"          Retailer_ID = {Retailer ID},",
+						"          Invoice_Date = {Invoice Date},",
+						"          Region,",
+						"          State,",
+						"          City,",
+						"          Product_Desc = Product,",
+						"          Price_per_Unit = {Price per Unit},",
+						"          Units_Sold = {Units Sold},",
+						"          Total_Sales = {Total Sales},",
+						"          Operating_Profit = {Operating Profit}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selecttransformation",
+						"selecttransformation sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> outputcontainer"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/sourcefiledatalake1')]",
+				"[concat(variables('factoryId'), '/datasets/selectoutputfile')]"
 			]
 		},
 		{

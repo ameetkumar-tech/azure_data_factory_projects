@@ -6,24 +6,137 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "pocadfameet"
-		},
-		"storageventbasedtrigger_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/80ea84e8-afce-4851-928a-9e2219724c69/resourceGroups/1-1bf360e5-playground-sandbox/providers/Microsoft.Storage/storageAccounts/pocstorageacameet"
-		},
-		"tumblingwindowtrigger_properties_pipeline_parameters_pstartdate": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowstarttime"
-		},
-		"tumblingwindowtrigger_properties_pipeline_parameters_penddate": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowEndtime"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/outputjson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStoragegen1forinput",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "output"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/selectoutputfile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageGen2_20260522",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "output"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sourcefiledatalake1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageGen2_20260522",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Adidas US Sales Datasets.csv",
+						"fileSystem": "input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Retailer",
+						"type": "String"
+					},
+					{
+						"name": "Retailer ID",
+						"type": "String"
+					},
+					{
+						"name": "Invoice Date",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "State",
+						"type": "String"
+					},
+					{
+						"name": "City",
+						"type": "String"
+					},
+					{
+						"name": "Product",
+						"type": "String"
+					},
+					{
+						"name": "Price per Unit",
+						"type": "String"
+					},
+					{
+						"name": "Units Sold",
+						"type": "String"
+					},
+					{
+						"name": "Total Sales",
+						"type": "String"
+					},
+					{
+						"name": "Operating Profit",
+						"type": "String"
+					},
+					{
+						"name": "Operating Margin",
+						"type": "String"
+					},
+					{
+						"name": "Sales Method",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/sourcefileforazuresql')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -1361,7 +1474,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sourceinputfile')]"
+				"[concat(variables('factoryId'), '/datasets/sourceinputfile')]",
+				"[concat(variables('factoryId'), '/datasets/outputjson')]"
 			]
 		},
 		{
@@ -1617,6 +1731,86 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Select_Transformation')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "sourcefiledatalake1",
+								"type": "DatasetReference"
+							},
+							"name": "sourcedatafile"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "selectoutputfile",
+								"type": "DatasetReference"
+							},
+							"name": "outputcontainer"
+						}
+					],
+					"transformations": [
+						{
+							"name": "selecttransformation"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Retailer as string,",
+						"          {Retailer ID} as string,",
+						"          {Invoice Date} as string,",
+						"          Region as string,",
+						"          State as string,",
+						"          City as string,",
+						"          Product as string,",
+						"          {Price per Unit} as string,",
+						"          {Units Sold} as string,",
+						"          {Total Sales} as string,",
+						"          {Operating Profit} as string,",
+						"          {Operating Margin} as string,",
+						"          {Sales Method} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> sourcedatafile",
+						"sourcedatafile select(mapColumn(",
+						"          Retailer,",
+						"          Retailer_ID = {Retailer ID},",
+						"          Invoice_Date = {Invoice Date},",
+						"          Region,",
+						"          State,",
+						"          City,",
+						"          Product_Desc = Product,",
+						"          Price_per_Unit = {Price per Unit},",
+						"          Units_Sold = {Units Sold},",
+						"          Total_Sales = {Total Sales},",
+						"          Operating_Profit = {Operating Profit}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selecttransformation",
+						"selecttransformation sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> outputcontainer"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/sourcefiledatalake1')]",
+				"[concat(variables('factoryId'), '/datasets/selectoutputfile')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/employee_join_department')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1796,118 +1990,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/employee_join_department')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Union_Transformation')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Mumbai_Union_Delhi",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Mumbai_Union_Delhi",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"Mumbaisource1": {},
-									"Delhisource2": {},
-									"mumbaiuniondelhioutput": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Mumbai_Union_Delhi')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/storageventbasedtrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Storageeventbasedtrigger",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/input/blobs/",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('storageventbasedtrigger_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Storageeventbasedtrigger')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/tumblingwindowtrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "Tumblingwindowtrigger",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"pstartdate": "[parameters('tumblingwindowtrigger_properties_pipeline_parameters_pstartdate')]",
-						"penddate": "[parameters('tumblingwindowtrigger_properties_pipeline_parameters_penddate')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Hour",
-					"interval": 24,
-					"startTime": "2024-03-01T00:00:00Z",
-					"endTime": "2024-03-07T22:53:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Tumblingwindowtrigger')]"
 			]
 		}
 	]

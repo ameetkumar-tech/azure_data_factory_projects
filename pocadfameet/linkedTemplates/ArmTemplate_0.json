@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2'"
 		},
+		"AzureDataLakeStorageGen2_20260522_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2_20260522'"
+		},
 		"AzureDataLakeStoragegen1forinput_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStoragegen1forinput'"
@@ -44,6 +48,10 @@
 			"defaultValue": "https://storagepocameet.dfs.core.windows.net/"
 		},
 		"AzureDataLakeStorageGen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://pocstorageaccountameet.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageGen2_20260522_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://pocstorageaccountameet.dfs.core.windows.net/"
 		},
@@ -133,6 +141,23 @@
 					"accountKey": {
 						"type": "SecureString",
 						"value": "[parameters('AzureDataLakeStorageGen2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorageGen2_20260522')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorageGen2_20260522_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorageGen2_20260522_accountKey')]"
 					}
 				}
 			},
@@ -688,79 +713,6 @@
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ADLS_Storage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "exports/retail_gold_sales_summary_single",
-						"fileSystem": "retail"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "transaction_date",
-						"type": "String"
-					},
-					{
-						"name": "product_id",
-						"type": "String"
-					},
-					{
-						"name": "product_name",
-						"type": "String"
-					},
-					{
-						"name": "category",
-						"type": "String"
-					},
-					{
-						"name": "store_id",
-						"type": "String"
-					},
-					{
-						"name": "store_name",
-						"type": "String"
-					},
-					{
-						"name": "location",
-						"type": "String"
-					},
-					{
-						"name": "total_quantity_sold",
-						"type": "String"
-					},
-					{
-						"name": "total_sales_amount",
-						"type": "String"
-					},
-					{
-						"name": "number_of_transactions",
-						"type": "String"
-					},
-					{
-						"name": "average_transaction_value",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLS_Storage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedText3')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
