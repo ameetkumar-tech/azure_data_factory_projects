@@ -13,6 +13,56 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/empty_files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Input_Container_LinkedServices",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "emptyfiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/input_files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Input_Container_LinkedServices",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/mumbaisourceunionconn')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -830,7 +880,10 @@
 				"annotations": [],
 				"lastPublishTime": "2026-02-23T03:57:03Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/input_files')]",
+				"[concat(variables('factoryId'), '/datasets/empty_files')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy_Data_Datalake_To_AzureSQLDB')]",
@@ -1703,6 +1756,78 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Aggregate_Transformation')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "aggregatesourcefileconn",
+								"type": "DatasetReference"
+							},
+							"name": "Aggregatesourcefile"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "aggregatedoutputconn",
+								"type": "DatasetReference"
+							},
+							"name": "outputaggregatedfile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregatetransformation"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as string,",
+						"          Name as string,",
+						"          Salary as integer,",
+						"          Address as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Aggregatesourcefile",
+						"Aggregatesourcefile aggregate(groupBy(Address),",
+						"     ID = countDistinct(ID),",
+						"          Total_Salary = sum(Salary),",
+						"          Max_Salary = max(Salary),",
+						"          Min_Salary = min(Salary),",
+						"          Average_Salary = avg(Salary)) ~> aggregatetransformation",
+						"aggregatetransformation sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Retailer as string,",
+						"          Retailer_ID as string,",
+						"          Invoice_Date as string,",
+						"          Region as string,",
+						"          State as string,",
+						"          City as string,",
+						"          Product_Desc as string,",
+						"          Price_per_Unit as string,",
+						"          Units_Sold as string,",
+						"          Total_Sales as string,",
+						"          Operating_Profit as string",
+						"     ),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> outputaggregatedfile"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dataflow_Filter_Sort_Transformation')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1771,245 +1896,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Derived_Transformation')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "derivedsourceconn",
-								"type": "DatasetReference"
-							},
-							"name": "derivedfilesourceconn"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "Derivedoutputemployee",
-								"type": "DatasetReference"
-							},
-							"name": "derivedoutputfile"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          Emp_ID as string,",
-						"          Name as string,",
-						"          Salary as integer,",
-						"          Address as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> derivedfilesourceconn",
-						"derivedfilesourceconn derive(Name = iif(isNull(Name),'Unknown',Name),",
-						"          Salary = iif(isNull(Salary),0,Salary),",
-						"          convertedcolumn = upper(Address)) ~> derivedColumn",
-						"derivedColumn sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          Retailer as string,",
-						"          Retailer_ID as string,",
-						"          Invoice_Date as string,",
-						"          Region as string,",
-						"          State as string,",
-						"          City as string,",
-						"          Product_Desc as string,",
-						"          Price_per_Unit as string,",
-						"          Units_Sold as string,",
-						"          Total_Sales as string,",
-						"          Operating_Profit as string",
-						"     ),",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> derivedoutputfile"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Mumbai_Union_Delhi')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "mumbaisourceunionconn",
-								"type": "DatasetReference"
-							},
-							"name": "Mumbaisource1"
-						},
-						{
-							"dataset": {
-								"referenceName": "Delhisourceunionconn",
-								"type": "DatasetReference"
-							},
-							"name": "Delhisource2"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "mumbaiuniondelhioutput",
-								"type": "DatasetReference"
-							},
-							"name": "mumbaiuniondelhioutput"
-						}
-					],
-					"transformations": [
-						{
-							"name": "mumbaiuniondelhi"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          Month as string,",
-						"          Sales as string,",
-						"          Profit as string,",
-						"          Location as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Mumbaisource1",
-						"source(output(",
-						"          Month as string,",
-						"          Sales as string,",
-						"          Profit as string,",
-						"          Location as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Delhisource2",
-						"Mumbaisource1, Delhisource2 union(byName: true)~> mumbaiuniondelhi",
-						"mumbaiuniondelhi sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          CustomerID as string,",
-						"          NameStyle as string,",
-						"          Title as string,",
-						"          FirstName as string,",
-						"          MiddleName as string,",
-						"          LastName as string,",
-						"          Suffix as string,",
-						"          CompanyName as string,",
-						"          SalesPerson as string,",
-						"          EmailAddress as string,",
-						"          Phone as string,",
-						"          PasswordHash as string,",
-						"          PasswordSalt as string,",
-						"          rowguid as string,",
-						"          ModifiedDate as string",
-						"     ),",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> mumbaiuniondelhioutput"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/mumbaisourceunionconn')]",
-				"[concat(variables('factoryId'), '/datasets/mumbaiuniondelhioutput')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Select_Transformation')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "sourcefiledatalake1",
-								"type": "DatasetReference"
-							},
-							"name": "sourcedatafile"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "selectoutputfile",
-								"type": "DatasetReference"
-							},
-							"name": "outputcontainer"
-						}
-					],
-					"transformations": [
-						{
-							"name": "selecttransformation"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          Retailer as string,",
-						"          {Retailer ID} as string,",
-						"          {Invoice Date} as string,",
-						"          Region as string,",
-						"          State as string,",
-						"          City as string,",
-						"          Product as string,",
-						"          {Price per Unit} as string,",
-						"          {Units Sold} as string,",
-						"          {Total Sales} as string,",
-						"          {Operating Profit} as string,",
-						"          {Operating Margin} as string,",
-						"          {Sales Method} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> sourcedatafile",
-						"sourcedatafile select(mapColumn(",
-						"          Retailer,",
-						"          Retailer_ID = {Retailer ID},",
-						"          Invoice_Date = {Invoice Date},",
-						"          Region,",
-						"          State,",
-						"          City,",
-						"          Product_Desc = Product,",
-						"          Price_per_Unit = {Price per Unit},",
-						"          Units_Sold = {Units Sold},",
-						"          Total_Sales = {Total Sales},",
-						"          Operating_Profit = {Operating Profit}",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selecttransformation",
-						"selecttransformation sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> outputcontainer"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sourcefiledatalake1')]",
-				"[concat(variables('factoryId'), '/datasets/selectoutputfile')]"
-			]
 		}
 	]
 }
