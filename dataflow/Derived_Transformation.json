@@ -1,0 +1,66 @@
+{
+	"name": "Derived_Transformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "derivedsourceconn",
+						"type": "DatasetReference"
+					},
+					"name": "derivedfilesourceconn"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Derivedoutputemployee",
+						"type": "DatasetReference"
+					},
+					"name": "derivedoutputfile"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Emp_ID as string,",
+				"          Name as string,",
+				"          Salary as integer,",
+				"          Address as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> derivedfilesourceconn",
+				"derivedfilesourceconn derive(Name = iif(isNull(Name),'Unknown',Name),",
+				"          Salary = iif(isNull(Salary),0,Salary),",
+				"          convertedcolumn = upper(Address)) ~> derivedColumn",
+				"derivedColumn sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Retailer as string,",
+				"          Retailer_ID as string,",
+				"          Invoice_Date as string,",
+				"          Region as string,",
+				"          State as string,",
+				"          City as string,",
+				"          Product_Desc as string,",
+				"          Price_per_Unit as string,",
+				"          Units_Sold as string,",
+				"          Total_Sales as string,",
+				"          Operating_Profit as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> derivedoutputfile"
+			]
+		}
+	}
+}
