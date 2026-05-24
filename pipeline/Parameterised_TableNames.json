@@ -44,7 +44,13 @@
 				"inputs": [
 					{
 						"referenceName": "Parameterisedsqldbconn",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Table_Name": {
+								"value": "@pipeline().parameters.Table_Name",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
