@@ -17,6 +17,9 @@
 		"AzureDataLakeStorageGen2_20260522_accountKey": {
 			"value": ""
 		},
+		"AzureDataLakeStorageGen2_20260524_accountKey": {
+			"value": ""
+		},
 		"AzureDataLakeStoragegen1forinput_accountKey": {
 			"value": ""
 		},
@@ -24,6 +27,9 @@
 			"value": ""
 		},
 		"AzureSqlDatabase_password": {
+			"value": ""
+		},
+		"AzureSqlDatabaseConn_20260524_password": {
 			"value": ""
 		},
 		"AzureSqlDatabaseconnparameterised_password": {
@@ -47,6 +53,9 @@
 		"AzureDataLakeStorageGen2_20260522_properties_typeProperties_url": {
 			"value": "https://pocstorageaccountameet.dfs.core.windows.net/"
 		},
+		"AzureDataLakeStorageGen2_20260524_properties_typeProperties_url": {
+			"value": "https://pocstorageacameet.dfs.core.windows.net/"
+		},
 		"AzureDataLakeStoragegen1forinput_properties_typeProperties_url": {
 			"value": "https://pocstorageacameet.dfs.core.windows.net/"
 		},
@@ -60,6 +69,15 @@
 			"value": "pocdatabaseameet"
 		},
 		"AzureSqlDatabase_properties_typeProperties_userName": {
+			"value": "ameet"
+		},
+		"AzureSqlDatabaseConn_20260524_properties_typeProperties_server": {
+			"value": "pocsqlserverameet.database.windows.net"
+		},
+		"AzureSqlDatabaseConn_20260524_properties_typeProperties_database": {
+			"value": "pocsqlserverdbameet"
+		},
+		"AzureSqlDatabaseConn_20260524_properties_typeProperties_userName": {
 			"value": "ameet"
 		},
 		"AzureSqlDatabaseconnparameterised_properties_typeProperties_server": {

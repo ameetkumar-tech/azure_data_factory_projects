@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2_20260522'"
 		},
+		"AzureDataLakeStorageGen2_20260524_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2_20260524'"
+		},
 		"AzureDataLakeStoragegen1forinput_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStoragegen1forinput'"
@@ -34,6 +38,10 @@
 		"AzureSqlDatabase_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzureSqlDatabase'"
+		},
+		"AzureSqlDatabaseConn_20260524_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabaseConn_20260524'"
 		},
 		"AzureSqlDatabaseconnparameterised_password": {
 			"type": "secureString",
@@ -63,6 +71,10 @@
 			"type": "string",
 			"defaultValue": "https://pocstorageaccountameet.dfs.core.windows.net/"
 		},
+		"AzureDataLakeStorageGen2_20260524_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://pocstorageacameet.dfs.core.windows.net/"
+		},
 		"AzureDataLakeStoragegen1forinput_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://pocstorageacameet.dfs.core.windows.net/"
@@ -80,6 +92,18 @@
 			"defaultValue": "pocdatabaseameet"
 		},
 		"AzureSqlDatabase_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ameet"
+		},
+		"AzureSqlDatabaseConn_20260524_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "pocsqlserverameet.database.windows.net"
+		},
+		"AzureSqlDatabaseConn_20260524_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "pocsqlserverdbameet"
+		},
+		"AzureSqlDatabaseConn_20260524_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "ameet"
 		},
@@ -197,6 +221,23 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorageGen2_20260524')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorageGen2_20260524_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorageGen2_20260524_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStoragegen1forinput')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -248,6 +289,28 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('AzureSqlDatabase_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabaseConn_20260524')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDatabaseConn_20260524_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabaseConn_20260524_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabaseConn_20260524_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabaseConn_20260524_password')]"
 					}
 				}
 			},
@@ -464,6 +527,24 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable_Conn')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseConn_20260524",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseConn_20260524')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTablecustomer')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -546,150 +627,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDbconn')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlconn')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDbconn",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDbconn')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlserverdb')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Retailer",
-						"type": "nvarchar"
-					},
-					{
-						"name": "RetailerID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Invoice_Date",
-						"type": "date"
-					},
-					{
-						"name": "Region",
-						"type": "nvarchar"
-					},
-					{
-						"name": "State",
-						"type": "nvarchar"
-					},
-					{
-						"name": "City",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Product",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Price_Per_Unit",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Unit_Sold",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Total_Sales",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "Operating_Profit",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "Operating_Margin_In_Percent",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Sales_Method",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Adidasussalesdata"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Delhisourceunionconn')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStoragegen1forinput",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "Delhi.csv",
-						"fileSystem": "input"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "Month",
-						"type": "String"
-					},
-					{
-						"name": "Sales",
-						"type": "String"
-					},
-					{
-						"name": "Profit",
-						"type": "String"
-					},
-					{
-						"name": "Location",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStoragegen1forinput')]"
 			]
 		}
 	]
