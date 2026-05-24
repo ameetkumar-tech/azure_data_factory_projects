@@ -1276,7 +1276,14 @@
 									"name": "IfCondition_To_Check_Employee_File",
 									"type": "IfCondition",
 									"dependsOn": [],
-									"userProperties": [],
+									"userProperties": [
+										{
+											"name": "employee"
+										},
+										{
+											"name": "non-employee"
+										}
+									],
 									"typeProperties": {
 										"expression": {
 											"value": "@contains(item().name,'Employee')",
@@ -3838,6 +3845,113 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStoragegen1forinput')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/employee_output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageGen2_20260524",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "employee"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageGen2_20260524')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/employee_true_condition')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageGen2_20260524",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Retailer",
+						"type": "String"
+					},
+					{
+						"name": "Retailer ID",
+						"type": "String"
+					},
+					{
+						"name": "Invoice Date",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "State",
+						"type": "String"
+					},
+					{
+						"name": "City",
+						"type": "String"
+					},
+					{
+						"name": "Product",
+						"type": "String"
+					},
+					{
+						"name": "Price per Unit",
+						"type": "String"
+					},
+					{
+						"name": "Units Sold",
+						"type": "String"
+					},
+					{
+						"name": "Total Sales",
+						"type": "String"
+					},
+					{
+						"name": "Operating Profit",
+						"type": "String"
+					},
+					{
+						"name": "Operating Margin",
+						"type": "String"
+					},
+					{
+						"name": "Sales Method",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageGen2_20260524')]"
 			]
 		},
 		{
