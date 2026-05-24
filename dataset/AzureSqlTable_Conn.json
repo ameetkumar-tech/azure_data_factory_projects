@@ -1,0 +1,12 @@
+{
+	"name": "AzureSqlTable_Conn",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseConn_20260524",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

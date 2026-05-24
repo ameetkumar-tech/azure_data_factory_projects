@@ -1,0 +1,30 @@
+{
+	"name": "GetMetdata_Activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get_Metadata_Read_SQL_Tables",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "AzureSqlTable_Conn",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"columnCount"
+					]
+				}
+			}
+		],
+		"annotations": []
+	}
+}
