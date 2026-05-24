@@ -2079,7 +2079,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "output_var",
+							"variableName": "output",
 							"value": {
 								"value": "@variables('var1')",
 								"type": "Expression"
@@ -2111,6 +2111,9 @@
 					},
 					"output_var": {
 						"type": "String"
+					},
+					"output": {
+						"type": "Array"
 					}
 				},
 				"annotations": []
