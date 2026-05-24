@@ -1,0 +1,55 @@
+{
+	"name": "Set_Append_Variable",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Append variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "output_var",
+					"value": {
+						"value": "@variables('var1')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var1",
+					"value": "40"
+				}
+			}
+		],
+		"variables": {
+			"var1": {
+				"type": "Array",
+				"defaultValue": [
+					10,
+					20,
+					30
+				]
+			},
+			"output_var": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
