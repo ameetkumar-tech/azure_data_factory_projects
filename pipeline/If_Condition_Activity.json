@@ -54,7 +54,14 @@
 							"name": "IfCondition_To_Check_Employee_File",
 							"type": "IfCondition",
 							"dependsOn": [],
-							"userProperties": [],
+							"userProperties": [
+								{
+									"name": "employee"
+								},
+								{
+									"name": "non-employee"
+								}
+							],
 							"typeProperties": {
 								"expression": {
 									"value": "@contains(item().name,'Employee')",
