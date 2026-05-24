@@ -1,0 +1,22 @@
+{
+	"name": "parameterisedoutput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_20260524",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "output"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

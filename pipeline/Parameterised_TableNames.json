@@ -49,7 +49,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Parameterisedstorageconn",
+						"referenceName": "parameterisedoutput",
 						"type": "DatasetReference"
 					}
 				]
