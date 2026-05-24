@@ -25,6 +25,148 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Aggregate_Transformation')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "aggregatesourcefileconn",
+								"type": "DatasetReference"
+							},
+							"name": "Aggregatesourcefile"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "aggregatedoutputconn",
+								"type": "DatasetReference"
+							},
+							"name": "outputaggregatedfile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregatetransformation"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as string,",
+						"          Name as string,",
+						"          Salary as integer,",
+						"          Address as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Aggregatesourcefile",
+						"Aggregatesourcefile aggregate(groupBy(Address),",
+						"     ID = countDistinct(ID),",
+						"          Total_Salary = sum(Salary),",
+						"          Max_Salary = max(Salary),",
+						"          Min_Salary = min(Salary),",
+						"          Average_Salary = avg(Salary)) ~> aggregatetransformation",
+						"aggregatetransformation sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Retailer as string,",
+						"          Retailer_ID as string,",
+						"          Invoice_Date as string,",
+						"          Region as string,",
+						"          State as string,",
+						"          City as string,",
+						"          Product_Desc as string,",
+						"          Price_per_Unit as string,",
+						"          Units_Sold as string,",
+						"          Total_Sales as string,",
+						"          Operating_Profit as string",
+						"     ),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> outputaggregatedfile"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dataflow_Filter_Sort_Transformation')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTablecustomer",
+								"type": "DatasetReference"
+							},
+							"name": "Azuresqlsource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "datalakedataflowoutput",
+								"type": "DatasetReference"
+							},
+							"name": "datalakegen2csv"
+						}
+					],
+					"transformations": [
+						{
+							"name": "filtertitleMr"
+						},
+						{
+							"name": "sortonfirstnameasc"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          CustomerID as integer,",
+						"          NameStyle as boolean,",
+						"          Title as string,",
+						"          FirstName as string,",
+						"          MiddleName as string,",
+						"          LastName as string,",
+						"          Suffix as string,",
+						"          CompanyName as string,",
+						"          SalesPerson as string,",
+						"          EmailAddress as string,",
+						"          Phone as string,",
+						"          PasswordHash as string,",
+						"          PasswordSalt as string,",
+						"          rowguid as string,",
+						"          ModifiedDate as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Azuresqlsource",
+						"Azuresqlsource filter(Title=='Mr.') ~> filtertitleMr",
+						"filtertitleMr sort(asc(FirstName, true),",
+						"     caseInsensitive: true) ~> sortonfirstnameasc",
+						"sortonfirstnameasc sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> datalakegen2csv"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Derived_Transformation')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -388,7 +530,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Aggregate_Transformation')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Dataflow_Transformation')]",
@@ -432,7 +576,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Dataflow_Filter_Sort_Transformation')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Derived_Transformation')]",
