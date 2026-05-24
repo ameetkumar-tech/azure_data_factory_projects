@@ -13,6 +13,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
@@ -55,7 +56,11 @@
 				"outputs": [
 					{
 						"referenceName": "outputfilename",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"File_Name": "Adidas_Sales_Sample_Data",
+							"TimeStamp": "@"
+						}
 					}
 				]
 			}
