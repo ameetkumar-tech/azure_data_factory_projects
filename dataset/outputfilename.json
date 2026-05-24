@@ -1,0 +1,36 @@
+{
+	"name": "outputfilename",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_20260524",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"File_Name": {
+				"type": "string",
+				"defaultValue": "Adidas_Sales_Sample_Data"
+			},
+			"TimeStamp": {
+				"type": "string",
+				"defaultValue": "@"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(dataset().File_Name,convertTimeZone(utcNow(),'UTC','India Standard Time'))\n\n",
+					"type": "Expression"
+				},
+				"container": "output"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
