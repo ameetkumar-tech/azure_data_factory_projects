@@ -8,6 +8,9 @@
 		"ADLS_Storage_accountKey": {
 			"value": ""
 		},
+		"AzureBlobStorage_20260524_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeStorageGen2_accountKey": {
 			"value": ""
 		},

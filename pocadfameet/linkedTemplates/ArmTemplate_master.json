@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ADLS_Storage'"
 		},
+		"AzureBlobStorage_20260524_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage_20260524'"
+		},
 		"AzureDataLakeStorageGen2_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2'"
@@ -164,6 +168,9 @@
 					},
 					"ADLS_Storage_accountKey": {
 						"value": "[parameters('ADLS_Storage_accountKey')]"
+					},
+					"AzureBlobStorage_20260524_connectionString": {
+						"value": "[parameters('AzureBlobStorage_20260524_connectionString')]"
 					},
 					"AzureDataLakeStorageGen2_accountKey": {
 						"value": "[parameters('AzureDataLakeStorageGen2_accountKey')]"
