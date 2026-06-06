@@ -1,0 +1,31 @@
+{
+	"name": "DelimitedText_employee_dest_20260606",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorageConn_20260606",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"employee": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().employee",
+					"type": "Expression"
+				},
+				"fileSystem": "employee"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
