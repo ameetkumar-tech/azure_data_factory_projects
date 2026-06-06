@@ -2,14 +2,14 @@
 	"name": "pocadfameet",
 	"properties": {
 		"trustModeClaimForMi": {
-			"value": "Enabled",
+			"value": "Disabled",
 			"editable": true
 		}
 	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
-		"principalId": "5e4c1aa9-201d-4553-b9dc-895797d926c0",
+		"principalId": "517d9c72-12f7-4986-8307-e4cacf0299e3",
 		"tenantId": "84f1e4ea-8554-43e1-8709-f0b8589ea118"
 	}
 }
