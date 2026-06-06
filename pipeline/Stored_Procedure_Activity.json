@@ -1,0 +1,42 @@
+{
+	"name": "Stored_Procedure_Activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Delete_Employee_Details",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[emp_Delete]",
+					"storedProcedureParameters": {
+						"ID": {
+							"value": {
+								"value": "@pipeline().parameters.ID",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseconn_20260606",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"ID": {
+				"type": "int"
+			}
+		},
+		"annotations": []
+	}
+}
