@@ -11,6 +11,9 @@
 		"AzureBlobStorage_20260524_connectionString": {
 			"value": ""
 		},
+		"AzureDataLakeStorageConn_20260606_accountKey": {
+			"value": ""
+		},
 		"AzureDataLakeStorageGen2_accountKey": {
 			"value": ""
 		},
@@ -49,6 +52,9 @@
 		},
 		"ADLS_Storage_properties_typeProperties_url": {
 			"value": "https://storagepocameet.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageConn_20260606_properties_typeProperties_url": {
+			"value": "https://pocstorageacameet.dfs.core.windows.net/"
 		},
 		"AzureDataLakeStorageGen2_properties_typeProperties_url": {
 			"value": "https://pocstorageaccountameet.dfs.core.windows.net/"
