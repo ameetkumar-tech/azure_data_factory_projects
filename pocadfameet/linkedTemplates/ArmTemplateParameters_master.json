@@ -32,6 +32,9 @@
 		"AzureSqlDatabaseConn_20260524_password": {
 			"value": ""
 		},
+		"AzureSqlDatabaseconn_20260606_password": {
+			"value": ""
+		},
 		"AzureSqlDatabaseconnparameterised_password": {
 			"value": ""
 		},
@@ -78,6 +81,15 @@
 			"value": "pocsqlserverdbameet"
 		},
 		"AzureSqlDatabaseConn_20260524_properties_typeProperties_userName": {
+			"value": "ameet"
+		},
+		"AzureSqlDatabaseconn_20260606_properties_typeProperties_server": {
+			"value": "pocsqlserverameet.database.windows.net"
+		},
+		"AzureSqlDatabaseconn_20260606_properties_typeProperties_database": {
+			"value": "pocdbameet"
+		},
+		"AzureSqlDatabaseconn_20260606_properties_typeProperties_userName": {
 			"value": "ameet"
 		},
 		"AzureSqlDatabaseconnparameterised_properties_typeProperties_server": {

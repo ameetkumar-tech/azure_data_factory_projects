@@ -43,6 +43,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzureSqlDatabaseConn_20260524'"
 		},
+		"AzureSqlDatabaseconn_20260606_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabaseconn_20260606'"
+		},
 		"AzureSqlDatabaseconnparameterised_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzureSqlDatabaseconnparameterised'"
@@ -104,6 +108,18 @@
 			"defaultValue": "pocsqlserverdbameet"
 		},
 		"AzureSqlDatabaseConn_20260524_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ameet"
+		},
+		"AzureSqlDatabaseconn_20260606_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "pocsqlserverameet.database.windows.net"
+		},
+		"AzureSqlDatabaseconn_20260606_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "pocdbameet"
+		},
+		"AzureSqlDatabaseconn_20260606_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "ameet"
 		},
@@ -217,6 +233,9 @@
 					"AzureSqlDatabaseConn_20260524_password": {
 						"value": "[parameters('AzureSqlDatabaseConn_20260524_password')]"
 					},
+					"AzureSqlDatabaseconn_20260606_password": {
+						"value": "[parameters('AzureSqlDatabaseconn_20260606_password')]"
+					},
 					"AzureSqlDatabaseconnparameterised_password": {
 						"value": "[parameters('AzureSqlDatabaseconnparameterised_password')]"
 					},
@@ -264,6 +283,15 @@
 					},
 					"AzureSqlDatabaseConn_20260524_properties_typeProperties_userName": {
 						"value": "[parameters('AzureSqlDatabaseConn_20260524_properties_typeProperties_userName')]"
+					},
+					"AzureSqlDatabaseconn_20260606_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDatabaseconn_20260606_properties_typeProperties_server')]"
+					},
+					"AzureSqlDatabaseconn_20260606_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDatabaseconn_20260606_properties_typeProperties_database')]"
+					},
+					"AzureSqlDatabaseconn_20260606_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlDatabaseconn_20260606_properties_typeProperties_userName')]"
 					},
 					"AzureSqlDatabaseconnparameterised_properties_typeProperties_server": {
 						"value": "[parameters('AzureSqlDatabaseconnparameterised_properties_typeProperties_server')]"
@@ -378,6 +406,26 @@
 					},
 					"storageventbasedtrigger_properties_typeProperties_scope": {
 						"value": "[parameters('storageventbasedtrigger_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'pocadfameet_ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "pocadfameet_ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"tumblingwindowtrigger_properties_pipeline_parameters_pstartdate": {
 						"value": "[parameters('tumblingwindowtrigger_properties_pipeline_parameters_pstartdate')]"
@@ -388,7 +436,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'pocadfameet_ArmTemplate_3')]"
+				"[resourceId('Microsoft.Resources/deployments', 'pocadfameet_ArmTemplate_4')]"
 			]
 		}
 	]
