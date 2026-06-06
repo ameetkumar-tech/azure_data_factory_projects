@@ -1,0 +1,22 @@
+{
+	"name": "AzureSqlTableconn_20260606",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseconn_20260606",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "employee_resign"
+		}
+	}
+}
