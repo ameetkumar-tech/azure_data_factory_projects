@@ -1,0 +1,22 @@
+{
+	"name": "DelimitedText_dest_20260607_02",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage_Conn_20260607",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "output"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
