@@ -1,6 +1,25 @@
 {
 	"name": "Web_Activity",
 	"properties": {
+		"activities": [
+			{
+				"name": "Web_Activity_To_Read_data",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://dummy.restapiexample.com/api/v1/employees"
+				}
+			}
+		],
 		"annotations": []
 	}
 }
