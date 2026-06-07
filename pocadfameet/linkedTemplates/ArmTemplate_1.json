@@ -900,12 +900,12 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedText_Dept_20260606')]",
+			"name": "[concat(parameters('factoryName'), '/DelimitedText_CS_20260607')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorageConn_20260606",
+					"referenceName": "AzureDataLakeStorage_Conn_20260607",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -913,8 +913,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "Department.csv",
-						"fileSystem": "input"
+						"fileSystem": "output"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -923,11 +922,23 @@
 				},
 				"schema": [
 					{
-						"name": "Dept_ID",
+						"name": "Emp_ID",
 						"type": "String"
 					},
 					{
-						"name": "Department",
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "Salary",
+						"type": "String"
+					},
+					{
+						"name": "Address",
+						"type": "String"
+					},
+					{
+						"name": "Dept_ID",
 						"type": "String"
 					}
 				]
