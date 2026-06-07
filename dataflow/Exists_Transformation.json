@@ -1,0 +1,76 @@
+{
+	"name": "Exists_Transformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText_emp_20260607",
+						"type": "DatasetReference"
+					},
+					"name": "Employeesource"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText_dept_20260607",
+						"type": "DatasetReference"
+					},
+					"name": "Departmentsource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText_output_20260607",
+						"type": "DatasetReference"
+					},
+					"name": "ouputsink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "exists"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Emp_ID as string,",
+				"          Name as string,",
+				"          Salary as string,",
+				"          Address as string,",
+				"          Dept_ID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Employeesource",
+				"source(output(",
+				"          Dept_ID as string,",
+				"          Department as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Departmentsource",
+				"Employeesource, Departmentsource exists(Employeesource@Dept_ID == Departmentsource@Dept_ID,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists",
+				"exists sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Emp_ID as string,",
+				"          Name as string,",
+				"          Salary as string,",
+				"          Address as string,",
+				"          Dept_ID as string",
+				"     ),",
+				"     partitionFileNames:['Exists_File_Output'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> ouputsink"
+			]
+		}
+	}
+}
