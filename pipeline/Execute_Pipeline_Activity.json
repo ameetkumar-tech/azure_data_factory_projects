@@ -1,0 +1,24 @@
+{
+	"name": "Execute_Pipeline_Activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute_Filter_Activity_Pipeline",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Filter_Activity",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
