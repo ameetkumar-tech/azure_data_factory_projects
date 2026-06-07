@@ -1,0 +1,85 @@
+{
+	"name": "Conditional_Split_Activity",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText_emp_20260607",
+						"type": "DatasetReference"
+					},
+					"name": "inputfilessource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText_CS_20260607",
+						"type": "DatasetReference"
+					},
+					"name": "outputsink"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText_CS_20260607",
+						"type": "DatasetReference"
+					},
+					"name": "outputgermanysink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "splitbasedonlocation"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Emp_ID as string,",
+				"          Name as string,",
+				"          Salary as string,",
+				"          Address as string,",
+				"          Dept_ID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> inputfilessource",
+				"inputfilessource split(equals(Address, 'India'),",
+				"     equals(Address, 'Germany'),",
+				"     disjoint: true) ~> splitbasedonlocation@(India, Germany)",
+				"splitbasedonlocation@India sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Emp_ID as string,",
+				"          Name as string,",
+				"          Salary as string,",
+				"          Address as string,",
+				"          Dept_ID as string",
+				"     ),",
+				"     partitionFileNames:['India_Based_Employees.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> outputsink",
+				"splitbasedonlocation@Germany sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Emp_ID as string,",
+				"          Name as string,",
+				"          Salary as string,",
+				"          Address as string,",
+				"          Dept_ID as string",
+				"     ),",
+				"     partitionFileNames:['Germany_Based_Employees.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> outputgermanysink"
+			]
+		}
+	}
+}
