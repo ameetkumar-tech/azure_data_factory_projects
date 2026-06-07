@@ -451,9 +451,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"storageventbasedtrigger_properties_typeProperties_scope": {
-						"value": "[parameters('storageventbasedtrigger_properties_typeProperties_scope')]"
 					}
 				}
 			},
@@ -474,6 +471,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"storageventbasedtrigger_properties_typeProperties_scope": {
+						"value": "[parameters('storageventbasedtrigger_properties_typeProperties_scope')]"
 					},
 					"tumblingwindowtrigger_properties_pipeline_parameters_pstartdate": {
 						"value": "[parameters('tumblingwindowtrigger_properties_pipeline_parameters_pstartdate')]"
