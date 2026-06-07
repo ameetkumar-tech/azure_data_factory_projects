@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2_20260524'"
 		},
+		"AzureDataLakeStorage_Conn_20260607_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage_Conn_20260607'"
+		},
 		"AzureDataLakeStoragegen1forinput_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStoragegen1forinput'"
@@ -84,6 +88,10 @@
 			"defaultValue": "https://pocstorageaccountameet.dfs.core.windows.net/"
 		},
 		"AzureDataLakeStorageGen2_20260524_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://pocstorageacameet.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorage_Conn_20260607_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://pocstorageacameet.dfs.core.windows.net/"
 		},
@@ -232,6 +240,9 @@
 					"AzureDataLakeStorageGen2_20260524_accountKey": {
 						"value": "[parameters('AzureDataLakeStorageGen2_20260524_accountKey')]"
 					},
+					"AzureDataLakeStorage_Conn_20260607_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage_Conn_20260607_accountKey')]"
+					},
 					"AzureDataLakeStoragegen1forinput_accountKey": {
 						"value": "[parameters('AzureDataLakeStoragegen1forinput_accountKey')]"
 					},
@@ -273,6 +284,9 @@
 					},
 					"AzureDataLakeStorageGen2_20260524_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorageGen2_20260524_properties_typeProperties_url')]"
+					},
+					"AzureDataLakeStorage_Conn_20260607_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage_Conn_20260607_properties_typeProperties_url')]"
 					},
 					"AzureDataLakeStoragegen1forinput_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStoragegen1forinput_properties_typeProperties_url')]"
